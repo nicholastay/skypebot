@@ -1,0 +1,19 @@
+{
+  "name": "skype-bot",
+  "version": "1.0.0",
+  "description": "A test bot for Skype using skyweb package",
+  "main": "bot.iced",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nicholas Tay <nexerq@gmail.com> (http://nicholastay.github.io)",
+  "license": "MIT",
+  "dependencies": {
+    "entities": "^1.1.1",
+    "moment": "^2.10.6",
+    "moment-timezone": "^0.4.1",
+    "nodesu": "^0.2.1",
+    "request": "^2.65.0",
+    "skyweb": "0.0.2"
+  }
+}
