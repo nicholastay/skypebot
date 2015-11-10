@@ -6,7 +6,7 @@ class exports.Translate
         @SkypeBot.Events.on 'skype.message.command', @handleCommand
 
     handleCommand: (username, displayName, command, cmdArgs, conversationUrl) =>
-        if command is '!translate'
+        if command is '~translate'
             splitArgs = cmdArgs.split ' '
 
             return if not splitArgs[0] or not splitArgs[1]

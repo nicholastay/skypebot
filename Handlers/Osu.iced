@@ -5,7 +5,7 @@ class exports.Osu
         @SkypeBot.Events.on 'skype.message.command', @handleCommand
 
     handleCommand: (username, displayName, command, cmdArgs, conversationUrl) =>
-        if command is '!osurank'
+        if command is '~osurank'
             username = if cmdArgs then cmdArgs else 'Nexerq'
             await @SkypeBot.Clients.OsuApi.getUser @SkypeBot.Clients.OsuApi.user.byUsername(username), defer err, resp
             return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'There was an error with the osu! api. Please try again later.' if err

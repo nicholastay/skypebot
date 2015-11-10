@@ -6,7 +6,7 @@ class exports.Weather
         @SkypeBot.Events.on 'skype.message.command', @handleCommand
 
     handleCommand: (username, displayName, command, cmdArgs, conversationUrl) =>
-        if command is '!weather'
+        if command is '~weather'
             location = if cmdArgs then location = cmdArgs else location = 'Melbourne'
 
             await request 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + location + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys', defer err, resp, body
