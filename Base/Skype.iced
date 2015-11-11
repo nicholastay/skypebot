@@ -27,16 +27,17 @@ class exports.Skype
                 @SkypeBot.Events.emit 'skype.message.raw', message
                 if message.resource.content
                     if message.resource.type is 'Message' and not message.resource.content.match removedMsgRegex # Not some removed metadata
-                        splitMsg = msgContent.split ' '
-                        if message.resource.messagetype is 'Text'
-                            # PM
-                            console.log "[#{formatTime}] #{displayName}: #{entities.decodeHTML msgContent}"
-                            @SkypeBot.Events.emit 'skype.message.pm', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
-                        else if message.resource.threadtopic and message.resource.messagetype is 'RichText'
-                            # GROUP
-                            console.log "[#{formatTime}] <GROUP: #{message.resource.threadtopic}> #{displayName}: #{entities.decodeHTML msgContent}"
-                            @SkypeBot.Events.emit 'skype.message.group', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
+                        if message.resource.messagetype is 'Text' or message.resource.messagetype is 'RichText'
+                            splitMsg = msgContent.split ' '
+                            if message.resource.threadtopic
+                                # GROUP
+                                console.log "[#{formatTime}] <GROUP: #{message.resource.threadtopic}> #{displayName}: #{entities.decodeHTML msgContent}"
+                                @SkypeBot.Events.emit 'skype.message.group', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
+                            else
+                                # PM
+                                console.log "[#{formatTime}] #{displayName}: #{entities.decodeHTML msgContent}"
+                                @SkypeBot.Events.emit 'skype.message.pm', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
 
-                        @SkypeBot.Events.emit 'skype.message', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
-                        @SkypeBot.Events.emit 'skype.message.detailed', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl, message.resource # Detailed with all resources for complex modules like removed
-                        @SkypeBot.Events.emit 'skype.message.command', username, displayName, splitMsg[0], entities.decodeHTML(splitMsg.slice(1).join(' ')), cleanConvoUrl
+                            @SkypeBot.Events.emit 'skype.message', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
+                            @SkypeBot.Events.emit 'skype.message.detailed', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl, message.resource # Detailed with all resources for complex modules like removed
+                            @SkypeBot.Events.emit 'skype.message.command', username, displayName, splitMsg[0], entities.decodeHTML(splitMsg.slice(1).join(' ')), cleanConvoUrl

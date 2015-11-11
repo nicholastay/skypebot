@@ -23,3 +23,13 @@ class exports.Tools
     formattedTime: -> return moment().format("MM/DD/YYYY hh:mm:ss")
 
     secondsToMinSecs: (seconds) -> return {minutes: Math.floor(seconds / 60), seconds: seconds % 60}
+
+    isAdmin: (username) ->
+        return true if username is @SkypeBot.Config.skype.username
+        return true if username in @SkypeBot.Config.admins
+        return false
+
+    # for shits and giggles
+    generateQuote: (username, displayname, timestamp, message) ->
+        # <quote author="USERNAME" authorname="DISPLAY NAME" timestamp="TIMESTAMP, WITHOUT LAST 3 DIGITS"><legacyquote>[5:53:54 PM] DISPLAYNAME: </legacyquote>MESSAGE HERE<legacyquote>\r\n\r\n&lt;&lt;&lt; </legacyquote></quote>
+        return "<quote author=\"#{username}\" authorname=\"#{displayname}\" timestamp=\"#{timestamp}\"><legacyquote>[#{moment(timestamp).format('h:mm:ss A')}] #{displayname}: </legacyquote>#{message}<legacyquote>\r\n\r\n&lt;&lt;&lt; </legacyquote></quote>"

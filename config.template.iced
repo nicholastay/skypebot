@@ -1,4 +1,5 @@
 module.exports =
+    admins: ['user1', 'user2']
     skype:
         username: ''
         password: ''

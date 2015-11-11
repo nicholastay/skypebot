@@ -1,4 +1,5 @@
 # Just some static commands that always output the same stuff i guess
+moment = require 'moment-timezone'
 
 class exports.Static
     constructor: (@SkypeBot) ->
@@ -20,9 +21,11 @@ class exports.Static
                     @SkypeBot.Clients.Skype.sendMessage conversationUrl, "I am now going offline on the request of #{displayName}. [Bot offline]"
                     @SkypeBot.Tools.delay 2500, -> process.exit()
 
-            when '~yandere'
-                # just ignore this thanks
-                @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'serena'
-
+            when '~quote'
+                splitArgs = cmdArgs.split '\n'
+                return if splitArgs.length isnt 3
+                return if not @SkypeBot.Tools.isAdmin username
+                @SkypeBot.Clients.Skype.sendMessage conversationUrl, @SkypeBot.Tools.generateQuote(splitArgs[0].trim(), splitArgs[1].trim(), parseInt(+moment()/1000), splitArgs[2])
+            
             when '~nickbot'
                 @SkypeBot.Clients.Skype.sendMessage conversationUrl, "Hi #{displayName}! I am the bot behind this account right now. I am currently in development by @nicholastay (github) and I could easily fuck up any time..."
