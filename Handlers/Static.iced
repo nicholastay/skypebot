@@ -10,6 +10,13 @@ class exports.Static
                 if username isnt @SkypeBot.Config.skype.username
                     @SkypeBot.Clients.Skype.sendMessage conversationUrl, "#{displayName}, you cannot make me seppuku because you are not the chosen one."
                 else
+                    # Random message of the day if theres data
+                    if @SkypeBot.MessageCache[conversationUrl]
+                        randomMessageArr = @SkypeBot.Tools.randomProperty(@SkypeBot.MessageCache[conversationUrl])
+                        if randomMessageArr # maybe theres no data in that convo... :(
+                            randomMessage = randomMessageArr[@SkypeBot.Tools.getRandomInt(0, randomMessageArr.length)].message
+                            @SkypeBot.Clients.Skype.sendMessage conversationUrl, "Before I leave, here's a message of the day: #{randomMessage}"
+
                     @SkypeBot.Clients.Skype.sendMessage conversationUrl, "I am now going offline on the request of #{displayName}. [Bot offline]"
                     @SkypeBot.Tools.delay 2500, -> process.exit()
 
