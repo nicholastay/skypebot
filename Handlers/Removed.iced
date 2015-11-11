@@ -5,7 +5,7 @@ removedMsgRegex = /<e_m ts="(.+?)" a="(.+?)" t="(.+?)"\/>/
 class exports.Removed
     constructor: (@SkypeBot) ->
         @SkypeBot.Events.on 'skype.message.raw', @removedHandler
-        @SkypeBot.Events.on 'skype.message.raw', @cacheMessages
+        @SkypeBot.Events.on 'skype.message.detailed', @cacheMessages
 
     removedHandler: (message) =>
         removedTest = removedMsgRegex.exec message.resource.content
@@ -21,18 +21,14 @@ class exports.Removed
                 if not foundMessage # skype is weird sometimes+1 sometimes not??
                     findMessageId = removedTest[1]
                     foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
-                if not foundMessage.message
-                    findMessageId = removedTest[1]
-                    foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
+                return if not foundMessage # yep not found, tried +1 and the id itself
+                return if not foundMessage.message # weird undefined stuff sometimes idk
                 if foundMessage
                     @SkypeBot.Clients.Skype.sendMessage cleanConvoUrl, "Recovering removed/edited message (from skypeID: #{removedTest[2]}): #{foundMessage.message}"
 
-    cacheMessages: (message) =>
-        return if not message.resource.content
-        return if message.resource.content.match removedMsgRegex # Dont want these in the cache
-        convoUrl = message.resource.conversationLink.split('/').pop()
-        username = message.resource.from.split(':')[2]
-        messageId = message.resource.id.substring(0, message.resource.id.length-3) # Skype when messages are removed, the ID for some reason excludes the last 3. Maybe they are random we will never know
+    cacheMessages: (username, displayName, message, convoUrl, resource) =>
+        return if not message or message.match removedMsgRegex # Dont want these in the cache
+        messageId = resource.id.substring(0, resource.id.length-3) # Skype when messages are removed, the ID for some reason excludes the last 3. Maybe they are random we will never know
 
         if !@SkypeBot.MessageCache[convoUrl]
             @SkypeBot.MessageCache[convoUrl] = {}
@@ -41,7 +37,7 @@ class exports.Removed
 
         @SkypeBot.MessageCache[convoUrl][username].push
             id: messageId
-            message: message.resource.content
+            message: message
 
         if @SkypeBot.MessageCache[convoUrl][username].length > 50
             @SkypeBot.MessageCache[convoUrl][username].shift()

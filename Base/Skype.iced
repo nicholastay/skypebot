@@ -38,4 +38,5 @@ class exports.Skype
                             @SkypeBot.Events.emit 'skype.message.group', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
 
                         @SkypeBot.Events.emit 'skype.message', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl
+                        @SkypeBot.Events.emit 'skype.message.detailed', username, displayName, entities.decodeHTML(msgContent), cleanConvoUrl, message.resource # Detailed with all resources for complex modules like removed
                         @SkypeBot.Events.emit 'skype.message.command', username, displayName, splitMsg[0], entities.decodeHTML(splitMsg.slice(1).join(' ')), cleanConvoUrl
