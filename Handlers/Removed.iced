@@ -21,10 +21,15 @@ class exports.Removed
                 if not foundMessage # skype is weird sometimes+1 sometimes not??
                     findMessageId = removedTest[1]
                     foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
+                if not foundMessage.message
+                    findMessageId = removedTest[1]
+                    foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
                 if foundMessage
                     @SkypeBot.Clients.Skype.sendMessage cleanConvoUrl, "Recovering removed/edited message (from skypeID: #{removedTest[2]}): #{foundMessage.message}"
 
     cacheMessages: (message) =>
+        return if not message.resource.content
+        return if message.resource.content.match removedMsgRegex # Dont want these in the cache
         convoUrl = message.resource.conversationLink.split('/').pop()
         username = message.resource.from.split(':')[2]
         messageId = message.resource.id.substring(0, message.resource.id.length-3) # Skype when messages are removed, the ID for some reason excludes the last 3. Maybe they are random we will never know
