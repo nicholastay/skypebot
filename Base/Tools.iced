@@ -21,3 +21,5 @@ class exports.Tools
     getRandomInt: (min, max) -> return Math.floor(Math.random() * (max - min)) + min
 
     formattedTime: -> return moment().format("MM/DD/YYYY hh:mm:ss")
+
+    secondsToMinSecs: (seconds) -> return {minutes: Math.floor(seconds / 60), seconds: seconds % 60}
