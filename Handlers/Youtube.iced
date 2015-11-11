@@ -1,6 +1,5 @@
 # Youtube link stuff
 request = require 'request'
-moment = require 'moment-timezone'
 
 # yeah i figured this out myself q.q
 # im bad at regex yeah thx
@@ -22,5 +21,4 @@ class exports.Youtube
             @SkypeBot.Clients.Skype.sendMessage conversationUrl, """YouTube link detected! Here's some information:
                                                                     (sent by #{displayName})
                                                                     Title: #{body.items[0].snippet.title}
-                                                                    Channel: #{body.items[0].snippet.channelTitle}
-                                                                    Published at: #{moment.tz(body.items[0].snippet.publishedAt).format('DD/MMM/YYYY HH:MMz')}"""
+                                                                    Channel: #{body.items[0].snippet.channelTitle}"""
