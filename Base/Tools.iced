@@ -3,6 +3,14 @@ moment = require 'moment-timezone'
 class exports.Tools
     constructor: (@SkypeBot) ->
 
+    # Hot reloading???
+    reloadHandler: (handler) ->
+        return if not @SkypeBot.Handlers[handler]
+        delete require.cache["#{process.cwd()}/Handlers/#{handler}"]
+        delete @SkypeBot.Handlers[handler]
+        h = require "#{process.cwd()}/Handlers/#{handler}"
+        @SkypeBot.Handlers[handler] = new h[handler] @SkypeBot
+
     # From some math question or something lmao
     fahrenheitToCelsius: (degrees) -> return (+degrees - 32) * (5 / 9)
 

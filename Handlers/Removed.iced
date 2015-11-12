@@ -21,7 +21,10 @@ class exports.Removed
                 if not foundMessage # skype is weird sometimes+1 sometimes not??
                     findMessageId = removedTest[1]
                     foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
-                return if not foundMessage # yep not found, tried +1 and the id itself
+                if not foundMessage # MAYBE ITS EVEN +2 ????
+                    findMessageId = (parseInt(removedTest[1])+2).toString()
+                    foundMessage = (@SkypeBot.MessageCache[cleanConvoUrl][username].filter((msg) -> return msg.id is findMessageId))[0]
+                return if not foundMessage # yep not found, tried +1, +2 and the id itself
                 return if not foundMessage.message # weird undefined stuff sometimes idk
                 if foundMessage
                     @SkypeBot.Clients.Skype.sendMessage cleanConvoUrl, "Recovering removed/edited message (from skypeID: #{removedTest[2]}): #{foundMessage.message}"
