@@ -36,10 +36,10 @@ class exports.Removed
         if username is @SkypeBot.Config.skype.username
             if message is '~disableRemovedMessages'
                 @SkypeBot.Config.removedMsgHandling = false
-                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'Removed/edited message detection has been disabled.'
+                return @SkypeBot.Clients.Skype.sendMessage convoUrl, 'Removed/edited message detection has been disabled.'
             else if message is '~enableRemovedMessages'
                 @SkypeBot.Config.removedMsgHandling = true
-                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'Removed/edited message detection has been enabled.'
+                return @SkypeBot.Clients.Skype.sendMessage convoUrl, 'Removed/edited message detection has been enabled.'
         
         return if @SkypeBot.Config.removedMsgHandling is false
 
