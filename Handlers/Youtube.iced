@@ -10,6 +10,17 @@ class exports.Youtube
         @SkypeBot.Events.on 'skype.message', @handleMessage
 
     handleMessage: (username, displayName, message, conversationUrl) =>
+        # Temp disable youtube links; maybe convo specific settings in the future
+        if username is @SkypeBot.Config.skype.username
+            if message is '~disableYoutubeLinks'
+                @SkypeBot.Config.youtubeLinkHandling = false
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'YouTube link handling has been disabled globally.'
+            else if message is '~enableYoutubeLinks'
+                @SkypeBot.Config.youtubeLinkHandling = true
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'YouTube link handling has been enabled globally.'
+        
+        return if @SkypeBot.Config.youtubeLinkHandling is false
+
         ytVidMatch = ytVidRegex.exec message
         if ytVidMatch
             videoId = ytVidMatch[4]

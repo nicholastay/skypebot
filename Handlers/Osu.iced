@@ -19,6 +19,17 @@ class exports.Osu
                                                                     Playcount: #{resp.playcount} plays"""
 
     handleMessage: (username, displayName, message, conversationUrl) =>
+        # Temp disable osu! links
+        if username is @SkypeBot.Config.skype.username
+            if message is '~disableOsuLinks'
+                @SkypeBot.Config.osuLinkHandling = false
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'osu! link handling has been disabled globally.'
+            else if message is '~enableOsuLinks'
+                @SkypeBot.Config.osuLinkHandling = true
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'osu! link handling has been enabled globally.'
+        
+        return if @SkypeBot.Config.osuLinkHandling is false
+        
         osuMapMatch = osuMapRegex.exec message
         if osuMapMatch
             mapType = osuMapMatch[1] # s/b set beatmap

@@ -17,10 +17,22 @@ class exports.Skype
             for message in messages
                 #console.log message
                 
-                formatTime = @SkypeBot.Tools.formattedTime()
                 username = message.resource.from.split(':')[2]
                 convoUrl = message.resource.conversationLink
                 cleanConvoUrl = message.resource.conversationLink.split('/').pop() # Must use this to reply
+                
+                # Disabled bot from chat temporarily handler
+                if @SkypeBot.Config.botTempDisable is true
+                    if message.resource.content is '~activate' and username is @SkypeBot.Config.skype.username
+                        @SkypeBot.Config.botTempDisable = false
+                        return @client.sendMessage cleanConvoUrl, 'Bot has been reactivated and ready to handler messages.'
+                    return
+                else
+                    if message.resource.content is '~deactivate' and username is @SkypeBot.Config.skype.username
+                        @SkypeBot.Config.botTempDisable = true
+                        return @client.sendMessage cleanConvoUrl, 'Bot has been temporarily deactivated and has stopped handling further messages.'
+                
+                formatTime = @SkypeBot.Tools.formattedTime()
                 displayName = message.resource.imdisplayname
                 msgContent = message.resource.content
 
