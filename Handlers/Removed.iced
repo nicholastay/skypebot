@@ -8,6 +8,8 @@ class exports.Removed
         @SkypeBot.Events.on 'skype.message.detailed', @cacheMessages
 
     removedHandler: (message) =>
+        return if @SkypeBot.Config.removedMsgHandling is false # 'idc if disabled'
+
         removedTest = removedMsgRegex.exec message.resource.content
         username = message.resource.from.split(':')[2]
         cleanConvoUrl = message.resource.conversationLink.split('/').pop()
@@ -30,6 +32,18 @@ class exports.Removed
                     @SkypeBot.Clients.Skype.sendMessage cleanConvoUrl, "Recovering removed/edited message (from skypeID: #{removedTest[2]}): #{foundMessage.message}"
 
     cacheMessages: (username, displayName, message, convoUrl, resource) =>
+        # Temp disable removed message tracking
+        if username is @SkypeBot.Config.skype.username
+            if message is '~disableRemovedMessages'
+                @SkypeBot.Config.removedMsgHandling = false
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'Removed/edited message detection has been disabled.'
+            else if message is '~enableRemovedMessages'
+                @SkypeBot.Config.removedMsgHandling = true
+                return @SkypeBot.Clients.Skype.sendMessage conversationUrl, 'Removed/edited message detection has been enabled.'
+        
+        return if @SkypeBot.Config.removedMsgHandling is false
+
+
         return if not message or message.match removedMsgRegex # Dont want these in the cache
         messageId = resource.id.substring(0, resource.id.length-3) # Skype when messages are removed, the ID for some reason excludes the last 3. Maybe they are random we will never know
 
